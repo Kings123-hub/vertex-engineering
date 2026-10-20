@@ -297,3 +297,13 @@ ul{padding-left:1.2em}
 .brand img{display:block;height:60px;width:auto}
 .site-footer .brand img{height:104px;margin-bottom:.4rem}
 @media (max-width:480px){.brand img{height:52px}}
+
+/* Contact cards + footer contact */
+.contact-cards{list-style:none;margin:0 0 1.4rem;padding:0;display:grid;gap:1rem}
+.contact-cards li{display:flex;gap:1rem;align-items:center;padding:1.1rem 1.2rem;background:var(--mist);border:1px solid var(--line);border-left:4px solid var(--purple);border-radius:4px}
+.contact-cards .ci{flex:none;width:48px;height:48px;border-radius:50%;background:var(--purple);color:#fff;display:grid;place-items:center}
+.contact-cards small{display:block;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:.15rem}
+.contact-cards a,.contact-cards address{font-family:var(--head);font-style:normal;font-weight:600;font-size:1.4rem;line-height:1.25;color:var(--ink);text-decoration:none}
+.contact-cards a:hover{color:var(--purple)}
+.foot-contact{margin:1.1rem 0 0;line-height:1.65}
+.foot .foot-contact a{color:#fff;font-weight:600;font-size:1.1rem}
