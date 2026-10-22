@@ -99,7 +99,7 @@ ul{padding-left:1.2em}
 .dot{position:relative;width:46px;height:6px;border:0;padding:0;background:rgba(255,255,255,.28);cursor:pointer;overflow:hidden}
 .dot::after{content:"";position:absolute;inset:0;background:var(--lilac);transform:scaleX(0);transform-origin:left}
 .dot[aria-current="true"]::after{transform:scaleX(1)}
-.hero.playing .dot[aria-current="true"]::after{animation:fill 6s linear forwards}
+.hero.playing .dot[aria-current="true"]::after{animation:fill var(--slide-ms,4s) linear forwards}
 @keyframes fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .ctl{width:44px;height:44px;border:2px solid rgba(255,255,255,.6);background:transparent;color:#fff;cursor:pointer;display:grid;place-items:center;border-radius:2px}
 .ctl:hover{background:#fff;color:var(--ink)}
@@ -326,3 +326,17 @@ ul{padding-left:1.2em}
 .checks li{position:relative;padding-left:1.9rem}
 .checks li::before{content:"";position:absolute;left:0;top:.35em;width:1.05rem;height:1.05rem;border-radius:50%;background:var(--purple) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center/70% no-repeat}
 @media (max-width:860px){.prog{grid-template-columns:1fr}.prog.flip .prog-media{order:0}.prog-num{left:.6rem;top:.6rem}}
+
+/* Home page brand panel: neat logo on the dark section */
+.brand-panel .brand-logo{width:100%;max-width:340px;height:auto;margin-inline:auto;border-radius:0;filter:drop-shadow(0 12px 32px rgba(104,57,193,.35))}
+@media (max-width:860px){.brand-panel .brand-logo{max-width:250px;margin-top:.5rem}}
+
+/* Banner video slide */
+.banner-video{background:var(--ink)}
+
+/* Welcome button on the video slide */
+.welcome-btn{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:4;display:inline-flex;align-items:center;gap:.5rem;padding:.55rem 1rem;border:0;border-radius:99px;background:rgba(29,21,31,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#fff;font:600 .95rem var(--body,inherit);cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.35);white-space:nowrap}
+.welcome-btn[hidden]{display:none}
+.welcome-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.welcome-btn:hover,.welcome-btn[aria-pressed="true"]{background:var(--purple,#6839C1)}
+.welcome-btn:focus-visible{outline:3px solid var(--lilac,#BEA2E3);outline-offset:2px}

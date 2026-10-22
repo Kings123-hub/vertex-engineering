@@ -16,7 +16,9 @@
     showBackToTop: true,
     showQuotePrompt: true,           // small "Need a quote?" message after a short delay
     quotePromptDelay: 15000,         // milliseconds
-    slideInterval: 7000,             // banner change time, in milliseconds
+    showWelcomeSpeech: true,         // "Hear our welcome" button on the video (uses the visitor's phone voice)
+    welcomeSpeech: 'Welcome to Vertex Engineering Services Limited. We provide installation, commissioning, maintenance and technical training services, powering progress through reliable engineering solutions. Contact us today to discuss your project.',
+    slideInterval: 2500,             // banner change time, in milliseconds (2500 = 2.5 seconds)
     /* Forms. Option A (best): create a free form at formspree.io and paste its
        address below, e.g. 'https://formspree.io/f/abcd1234'. Enquiries then arrive by email.
        Option B (default while empty): the enquiry is sent to your WhatsApp number. */
@@ -142,17 +144,53 @@
     var pauseBtn = qs('.ctl-pause', hero);
     var prevBtn = qs('.ctl-prev', hero);
     var nextBtn = qs('.ctl-next', hero);
-    var index = 0, timer = null, userPaused = reduceMotion, hoverPaused = false;
+    var index = 0, timer = null, userPaused = reduceMotion, hoverPaused = false, holdAuto = false;
 
     function running() { return !userPaused && !hoverPaused; }
+
+    /* the slide's video, unless it failed to load (then the poster picture is shown instead) */
+    function videoOf(slide) {
+      var v = slide ? qs('video', slide) : null;
+      return v && !v.getAttribute('data-failed') ? v : null;
+    }
+
+    function playVideo(v) {
+      var p;
+      try { p = v.play(); } catch (e) { p = null; }
+      if (p && p.catch) {
+        p.catch(function (err) {
+          if (err && err.name === 'AbortError') { return; }
+          v.setAttribute('data-failed', '1');
+          restart();
+        });
+      }
+    }
+
+    /* how long the current slide stays: the rest of the video, or the normal banner time */
+    function slideDelay() {
+      var v = videoOf(slides[index]);
+      if (v) {
+        var total = (v.duration && isFinite(v.duration)) ? v.duration : 10.5;
+        var left = Math.max(total - (v.currentTime || 0), 1);
+        return Math.round(left * 1000) + 400;
+      }
+      return CONFIG.slideInterval;
+    }
 
     function restart() {
       clearTimeout(timer);
       hero.classList.remove('playing');
-      if (running()) {
+      var v = videoOf(slides[index]);
+      if (v) {
+        v.loop = holdAuto;               /* keep the video repeating while the welcome message is spoken */
+        if (running()) { if (v.paused) { playVideo(v); } } else { v.pause(); }
+      }
+      if (running() && !holdAuto) {
+        var ms = slideDelay();
+        hero.style.setProperty('--slide-ms', ms + 'ms');
         void hero.offsetWidth; /* restarts the progress bar */
         hero.classList.add('playing');
-        timer = setTimeout(function () { show(index + 1, false); }, CONFIG.slideInterval);
+        timer = setTimeout(function () { show(index + 1, false); }, ms);
       }
     }
 
@@ -163,14 +201,24 @@
         s.classList.toggle('is-active', on);
         s.setAttribute('aria-hidden', on ? 'false' : 'true');
         qsa('a', s).forEach(function (a) { a.tabIndex = on ? 0 : -1; });
+        var v = qs('video', s);
+        if (v) {
+          if (on) { try { v.currentTime = 0; } catch (e) { /* not ready yet */ } } else { v.pause(); }
+        }
       });
       dots.forEach(function (d, n) { d.setAttribute('aria-current', n === index ? 'true' : 'false'); });
       if (announce && live) {
         var h = qs('h2', slides[index]);
         live.textContent = 'Slide ' + (index + 1) + ' of ' + slides.length + (h ? ': ' + h.textContent : '');
       }
+      try { document.dispatchEvent(new CustomEvent('vx:slide', { detail: index })); } catch (e) { /* older browser */ }
       restart();
     }
+
+    document.addEventListener('vx:hold', function (e) {
+      holdAuto = !!(e && e.detail);
+      restart();
+    });
 
     function syncPause() {
       if (!pauseBtn) { return; }
@@ -180,6 +228,19 @@
       if (ip) { ip.style.display = userPaused ? 'none' : 'block'; }
       if (iy) { iy.style.display = userPaused ? 'block' : 'none'; }
     }
+
+    qsa('video', hero).forEach(function (v) {
+      v.addEventListener('ended', function () {
+        if (slides[index].contains(v) && running()) { show(index + 1, false); }
+      });
+      v.addEventListener('error', function () {
+        v.setAttribute('data-failed', '1');
+        if (slides[index].contains(v)) { restart(); }
+      });
+      v.addEventListener('loadedmetadata', function () {
+        if (slides[index].contains(v) && running()) { restart(); }
+      });
+    });
 
     if (prevBtn) { prevBtn.addEventListener('click', function () { show(index - 1, true); }); }
     if (nextBtn) { nextBtn.addEventListener('click', function () { show(index + 1, true); }); }
@@ -210,11 +271,60 @@
     }, { passive: true });
 
     document.addEventListener('visibilitychange', function () {
-      if (document.hidden) { clearTimeout(timer); hero.classList.remove('playing'); } else { restart(); }
+      if (document.hidden) {
+        clearTimeout(timer);
+        hero.classList.remove('playing');
+        var v = videoOf(slides[index]);
+        if (v) { v.pause(); }
+      } else { restart(); }
     });
 
     syncPause();
     show(0, false);
+  }
+
+  /* ------------------------------------------------------------------
+     "Hear our welcome" button (spoken by the visitor's own phone voice)
+     ------------------------------------------------------------------ */
+  function initWelcome() {
+    var btn = qs('.welcome-btn');
+    if (!btn || !CONFIG.showWelcomeSpeech) { return; }
+    var synth = window.speechSynthesis;
+    if (!synth || !window.SpeechSynthesisUtterance) { return; }   /* button stays hidden */
+    var label = qs('span', btn);
+    var speaking = false;
+
+    function setState(on) {
+      speaking = on;
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      btn.setAttribute('aria-label', on ? 'Stop the welcome message' : 'Hear our welcome message');
+      if (label) { label.textContent = on ? 'Stop' : 'Hear our welcome'; }
+      try { document.dispatchEvent(new CustomEvent('vx:hold', { detail: on })); } catch (e) { /* older browser */ }
+    }
+    function stop() {
+      try { synth.cancel(); } catch (e) { /* ignore */ }
+      if (speaking) { setState(false); }
+    }
+
+    btn.hidden = false;
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (speaking) { stop(); return; }
+      try { synth.cancel(); } catch (err) { /* ignore */ }
+      var u = new window.SpeechSynthesisUtterance(CONFIG.welcomeSpeech);
+      u.lang = 'en-GB';
+      u.rate = 0.95;
+      u.onend = function () { setState(false); };
+      u.onerror = function () { setState(false); };
+      setState(true);
+      synth.speak(u);
+    });
+    document.addEventListener('vx:slide', function (e) {
+      if (speaking && e && e.detail !== 0) { stop(); }
+    });
+    document.addEventListener('visibilitychange', function () { if (document.hidden) { stop(); } });
+    window.addEventListener('pagehide', stop);
   }
 
   /* ------------------------------------------------------------------
@@ -402,7 +512,7 @@
 
   function init() {
     /* each part runs on its own, so a problem in one never stops the others */
-    [injectStyles, initMenu, initYear, initHero, initForms, initFloating, initQuotePrompt].forEach(safely);
+    [injectStyles, initMenu, initYear, initHero, initWelcome, initForms, initFloating, initQuotePrompt].forEach(safely);
   }
 
   if (document.readyState === 'loading') {
