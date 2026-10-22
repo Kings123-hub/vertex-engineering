@@ -144,6 +144,7 @@
     var pauseBtn = qs('.ctl-pause', hero);
     var prevBtn = qs('.ctl-prev', hero);
     var nextBtn = qs('.ctl-next', hero);
+    var playBtn = qs('.play-btn', hero);
     var index = 0, timer = null, userPaused = reduceMotion, hoverPaused = false, holdAuto = false;
 
     function running() { return !userPaused && !hoverPaused; }
@@ -160,6 +161,7 @@
       if (p && p.catch) {
         p.catch(function (err) {
           if (err && err.name === 'AbortError') { return; }
+          if (err && err.name === 'NotAllowedError') { showPlay(true); return; }   /* phone blocked autoplay */
           v.setAttribute('data-failed', '1');
           restart();
         });
@@ -213,12 +215,35 @@
       }
       try { document.dispatchEvent(new CustomEvent('vx:slide', { detail: index })); } catch (e) { /* older browser */ }
       restart();
+      checkAutoplay();
     }
 
     document.addEventListener('vx:hold', function (e) {
       holdAuto = !!(e && e.detail);
       restart();
     });
+
+    /* If the phone blocks automatic video (battery saver, data saver, reduced motion), show a Play button */
+    function showPlay(on) { if (playBtn) { playBtn.hidden = !on; } }
+    function checkAutoplay() {
+      showPlay(false);
+      if (!playBtn || !videoOf(slides[index])) { return; }
+      window.setTimeout(function () {
+        var v = videoOf(slides[index]);
+        showPlay(!!v && v.paused && !v.ended && v.currentTime < 0.4);
+      }, 900);
+    }
+    if (playBtn) {
+      playBtn.addEventListener('click', function () {
+        var v = videoOf(slides[index]);
+        userPaused = false;
+        hoverPaused = false;
+        syncPause();
+        if (v) { v.muted = true; try { v.currentTime = 0; } catch (e) { /* not ready */ } playVideo(v); }
+        showPlay(false);
+        restart();
+      });
+    }
 
     function syncPause() {
       if (!pauseBtn) { return; }
@@ -230,6 +255,7 @@
     }
 
     qsa('video', hero).forEach(function (v) {
+      v.addEventListener('playing', function () { showPlay(false); });
       v.addEventListener('ended', function () {
         if (slides[index].contains(v) && running()) { show(index + 1, false); }
       });
