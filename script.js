@@ -10,8 +10,8 @@
      ------------------------------------------------------------------ */
   var CONFIG = {
     companyName: 'Vertex Engineering Services Limited',
-    phoneDisplay: '0912 335 6510',
-    phoneIntl: '2349123356510',      // international format, digits only (no +)
+    phoneDisplay: '0810 195 3004',
+    phoneIntl: '2348101953004',      // international format, digits only (no +)
     showWhatsApp: true,              // set false to hide the WhatsApp button
     showBackToTop: true,
     showQuotePrompt: true,           // small "Need a quote?" message after a short delay
