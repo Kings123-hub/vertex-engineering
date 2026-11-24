@@ -346,3 +346,48 @@ ul{padding-left:1.2em}
 .play-btn[hidden]{display:none}
 .play-btn svg{width:40px;height:40px;fill:currentColor;margin-left:5px}
 .play-btn:focus-visible{outline:3px solid var(--lilac,#BEA2E3);outline-offset:3px}
+
+/* =====================================================================
+   Service cards with site photographs, category links, single-video banner
+   ===================================================================== */
+/* Banner: one video with a single pause button */
+.hero-controls .wrap{justify-content:flex-end}
+.hero-controls{padding:.9rem 0 4.4rem}
+
+/* Whole-card link without nesting links: the "Learn more" link covers the card */
+.svc{position:relative}
+.svc .more{position:static;align-self:flex-start}
+.svc a.more::after{content:"";position:absolute;inset:0;z-index:1}
+.svc a.more:focus-visible{outline:3px solid var(--purple);outline-offset:3px}
+
+/* Photographs are shown whole (no cropping) on a soft blurred copy of themselves */
+.svc-img.photo{position:relative;aspect-ratio:4/5;background:#2a1f3d;isolation:isolate}
+.svc-img.photo::before{content:"";position:absolute;inset:-26px;z-index:-1;background:var(--bg) center/cover no-repeat;filter:blur(22px) brightness(.72) saturate(1.1)}
+.svc-img.photo img{position:relative;object-fit:contain}
+.svc-img.photo.wide{aspect-ratio:3/2}
+.svc:hover .svc-img.photo img{transform:scale(1.02)}
+.media-natural{aspect-ratio:auto;background:none}
+.media-natural img{height:auto;object-fit:initial}
+
+/* Category label on each card */
+.svc-tag{flex:none!important;margin:0 0 .6rem}
+.svc-tag a{position:relative;z-index:2;display:inline-block;padding:.38rem .65rem;border-radius:3px;background:var(--mist);color:var(--purple);font:700 .72rem/1 var(--body);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;transition:background .15s,color .15s}
+.svc-tag a:hover{background:var(--purple);color:#fff}
+
+/* Short summary + "Read more" */
+.svc-more{position:relative;z-index:2;margin:.2rem 0 .2rem}
+.svc-more summary{display:inline-block;cursor:pointer;font-weight:600;color:var(--purple);list-style:none}
+.svc-more summary::-webkit-details-marker{display:none}
+.svc-more summary::after{content:" +"}
+.svc-more[open] summary::after{content:" \2212"}
+.svc-more summary:hover{text-decoration:underline}
+.svc-more summary:focus-visible{outline:3px solid var(--purple);outline-offset:3px}
+.svc-more p{margin:.6rem 0 0;color:var(--muted)}
+.svc-grid .svc>p:not(.svc-tag){flex:none}
+.svc-grid .svc>.more,.svc-grid .svc>.svc-more:last-child{margin-top:.9rem}
+
+/* Category pages */
+.work p{flex:none;margin:0 0 .8rem}
+.work .more{margin-top:auto;padding-top:.4rem}
+.cat-links{margin-top:2.4rem}
+@media (max-width:640px){.svc-img.photo{aspect-ratio:4/5}}
