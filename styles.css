@@ -391,3 +391,132 @@ ul{padding-left:1.2em}
 .work .more{margin-top:auto;padding-top:.4rem}
 .cat-links{margin-top:2.4rem}
 @media (max-width:640px){.svc-img.photo{aspect-ratio:4/5}}
+
+/* Services page: the same photographs as the home page cards, shown whole */
+.media.photo{position:relative;isolation:isolate;aspect-ratio:4/5;background:#2a1f3d;box-shadow:0 14px 30px -18px rgba(29,21,31,.55)}
+.media.photo::before{content:"";position:absolute;inset:-26px;z-index:-1;background:var(--bg) center/cover no-repeat;filter:blur(22px) brightness(.72) saturate(1.1)}
+.media.photo img{position:relative;object-fit:contain}
+.media.photo.wide{aspect-ratio:3/2}
+.svc-row .media.photo{max-width:460px}
+.svc-row .media.photo.wide{max-width:none}
+.svc-row .svc-tag{margin:0 0 .8rem}
+@media (max-width:820px){.svc-row .media.photo{max-width:none}}
+
+/* =====================================================================
+   BRIGHT VIOLET THEME
+   Bold headings, small capital labels, rounded cards and soft colour.
+   Not black: deep indigo and violet carry the colour.
+   To go back to the old look, delete everything from this line down.
+   ===================================================================== */
+:root{
+  --ink:#2B1B5A;       /* deep indigo (headings, dark sections) */
+  --plum:#4A2D9C;
+  --plum-2:#6A42CF;
+  --purple:#6839C1;    /* logo purple (main accent) */
+  --violet:#7B4FC6;
+  --lilac:#BEA2E3;
+  --mist:#F3EDFF;
+  --line:#DCCFF7;
+  --text:#35294F;
+  --muted:#5D5278;
+  --glow:rgba(109,63,214,.28);
+}
+::selection{background:var(--lilac);color:var(--ink)}
+h1,h2,h3,h4{font-weight:700;letter-spacing:-.015em}
+h2{font-size:clamp(2rem,4.4vw,3.2rem)}
+.eyebrow{font:700 .8rem var(--body);letter-spacing:.22em;text-transform:uppercase;color:var(--purple);margin:0 0 .8rem;max-width:none}
+.section.dark .eyebrow,.page-hero .eyebrow,.cta .eyebrow{color:var(--lilac)}
+.lead{color:var(--muted)}
+
+/* Buttons */
+.btn{border-radius:12px;padding:.9rem 1.7rem;background:linear-gradient(135deg,#7B4FC6,#5A32B0);border-color:transparent;box-shadow:0 10px 24px -10px var(--glow);transition:transform .15s,box-shadow .15s,filter .15s}
+.btn:hover{background:linear-gradient(135deg,#8C63D6,#6A42CF);border-color:transparent;color:#fff;transform:translateY(-2px);box-shadow:0 14px 28px -10px var(--glow)}
+.btn-ghost{background:transparent;border:2px solid rgba(255,255,255,.75);box-shadow:none}
+.btn-ghost:hover{background:#fff;color:var(--ink);box-shadow:none}
+.btn-light{background:#fff;color:var(--purple);box-shadow:none}
+.btn-light:hover{background:var(--lilac);color:var(--ink);border-color:transparent}
+
+/* Header */
+.site-header{box-shadow:0 8px 28px -22px rgba(43,27,90,.6)}
+.menu-toggle{border-radius:12px;border-color:var(--purple);color:var(--purple)}
+#nav a.top:hover,#nav a.top[aria-current="page"]{color:var(--purple);border-bottom-color:var(--violet)}
+.sub{border-radius:0 0 14px 14px;border-top-color:var(--violet)}
+.sub a:hover{background:var(--mist)}
+
+/* Hero slider */
+.hero,.hero-controls{background:linear-gradient(135deg,#2B1B5A,#3E2589)}
+.poster-link{background:#2B1B5A}
+.ctl{border-radius:12px;border-color:rgba(255,255,255,.55)}
+.ctl:hover{background:#fff;color:var(--ink)}
+.dot{border-radius:4px;background:rgba(255,255,255,.3)}
+.dot::after{background:var(--lilac)}
+
+/* Sections */
+.section.mist{background:radial-gradient(900px 420px at 88% 0%,rgba(133,89,234,.20),transparent 62%),radial-gradient(760px 380px at 0% 100%,rgba(205,184,255,.45),transparent 62%),#F3EDFF}
+.section.dark{background:radial-gradient(900px 420px at 90% 0%,rgba(154,112,255,.35),transparent 60%),linear-gradient(135deg,#2B1B5A 0%,#46299B 100%);color:#EDE6FF}
+.section-head h2::after{content:"";display:block;width:56px;height:5px;border-radius:4px;margin-top:.9rem;background:linear-gradient(90deg,var(--violet),var(--lilac))}
+.section.dark .section-head h2::after,.cta h2::after{background:linear-gradient(90deg,var(--lilac),#fff)}
+
+/* Service cards */
+.svc-grid{border:0;gap:1.5rem}
+.svc{border:1px solid var(--line);border-top-width:1px;border-radius:20px;overflow:hidden;background:#fff;box-shadow:0 18px 40px -26px rgba(75,45,156,.55);transition:transform .2s,box-shadow .2s,border-color .2s}
+.svc:hover{background:#fff;border-color:var(--violet);border-top-color:var(--violet);transform:translateY(-5px);box-shadow:0 26px 50px -24px rgba(75,45,156,.7)}
+
+/* Industries */
+.ind-list{border-top-color:rgba(255,255,255,.28)}
+.ind{border-bottom-color:rgba(255,255,255,.28)}
+.ind-img{border-radius:14px;border-color:rgba(255,255,255,.35)}
+.ind p{color:#E4D9FA}
+.ind:hover h3{color:var(--lilac)}
+
+/* Why Vertex, steps */
+.why{gap:1.4rem}
+.why div{background:#fff;border:1px solid var(--line);border-left:5px solid var(--violet);border-radius:16px;padding:1.4rem 1.5rem;box-shadow:0 16px 36px -28px rgba(75,45,156,.6)}
+.ico,.section.mist .ico{background:linear-gradient(135deg,#7B4FC6,#5A32B0);color:#fff;box-shadow:0 8px 18px -8px var(--glow)}
+.steps .ico{box-shadow:0 8px 18px -8px var(--glow)}
+.steps li::before{color:var(--violet)}
+.steps li::after{background:var(--lilac)}
+
+/* Brand panel, call to action */
+.caps li::before{background:var(--lilac);border-radius:50%}
+.cta{background:radial-gradient(700px 320px at 85% 0%,rgba(255,255,255,.22),transparent 60%),linear-gradient(120deg,#5A32B0,#7B4FC6)}
+
+/* Inner pages */
+.page-hero{background:radial-gradient(800px 420px at 90% 10%,rgba(154,112,255,.45),transparent 60%),linear-gradient(115deg,#2B1B5A 30%,#4A2D9C 100%)}
+.page-hero::after{background:radial-gradient(closest-side,rgba(205,184,255,.35),transparent)}
+.note{border-left-color:var(--violet);border-radius:0 14px 14px 0;background:var(--mist)}
+.svc-row{border-bottom-color:var(--line)}
+.empty{border-radius:14px}
+
+/* Pictures */
+.media{border-radius:20px;box-shadow:0 22px 44px -26px rgba(75,45,156,.7)}
+.proj-img{border-radius:18px}
+.proj-img.has-img{box-shadow:0 18px 38px -24px rgba(75,45,156,.7)}
+.proj figcaption strong{font-size:1.1rem}
+.prog-media img{border-radius:20px;box-shadow:0 22px 44px -26px rgba(75,45,156,.7)}
+.prog-num{background:linear-gradient(135deg,#7B4FC6,#5A32B0)}
+.chips li{background:#fff;border-color:var(--line);color:var(--purple)}
+.checks li::before{background-color:var(--violet)}
+.prog-nav a{background:#fff;border-color:var(--line)}
+.prog-nav a:hover{background:linear-gradient(135deg,#7B4FC6,#5A32B0);border-color:transparent}
+
+/* Forms and contact */
+.form input,.form select,.form textarea{border:1.5px solid #CDBDF0;border-radius:12px;padding:.8rem .95rem}
+.form input:focus,.form select:focus,.form textarea:focus{outline:3px solid rgba(133,89,234,.3);border-color:var(--violet)}
+.contact-side{border-top:0;padding-top:0}
+.contact-cards li{background:#fff;border:1px solid var(--line);border-left:5px solid var(--violet);border-radius:16px;box-shadow:0 16px 36px -28px rgba(75,45,156,.6)}
+.contact-cards .ci{background:linear-gradient(135deg,#7B4FC6,#5A32B0)}
+
+/* Footer: deep indigo, not black */
+.site-footer{background:radial-gradient(800px 340px at 100% 0%,rgba(154,112,255,.28),transparent 60%),linear-gradient(160deg,#2B1B5A,#3A2380);color:#DCCFF7;border-top:5px solid var(--violet)}
+.foot a,.foot-contact a{color:#E8DEFF}
+.foot a:hover{color:#fff}
+.foot h4{letter-spacing:.04em}
+.foot .brand-text b{color:var(--lilac)}
+.legal{border-top-color:rgba(255,255,255,.2)}
+
+/* Floating buttons keep their own colours; round the video controls to match */
+.welcome-btn{background:rgba(43,27,90,.78)}
+.play-btn{background:rgba(109,63,214,.95)}
+.btn[style*="background:transparent"]{border:2px solid var(--purple);box-shadow:none}
+.btn[style*="background:transparent"]:hover{background:var(--purple)!important;color:#fff!important}
